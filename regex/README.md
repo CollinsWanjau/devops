@@ -202,3 +202,101 @@ The s matches a space, a tab, a carriage return, a line feed or a form feed.
 * `\W` - same as `[^\w]`
 
 * `\S` - same as `[^\s]`
+
+#### Start of string and End of String Anchors
+
+* Anchors match a position before, after or in between characters.
+
+* The caret `^` matches the position before the first character in the string.
+
+* Applying `^a` to `abc` matches `a`.
+
+* `$` matches right after the last character in the string.`c$` matches `c`
+in `abc`, while a$ does not match at all.
+
+#### Using ^ and $ as Start of Line and End of Line Anchors
+
+* If you have a string consisting of multiple liines, like 
+`first line\nsecond line`(where \n indicates a line break), it is often
+desirable to work with lines, rather than the entire string.
+
+* `^` can match at the start of the string(before the `f` in the above string)
+as well as after each line break(between `\n` and `s`).
+
+* Likewise, `$`  still matches at the end of the string (after the last `e`)
+, and also before every line break(between `e` and `\n`)
+
+#### Use the Dot Sparingly
+
+* The dot is a very powerful regex metacharacter. It allows you to be lazy.
+
+* Put in a dot and everything matches just fine when you test the regex on
+valid data.
+
+* The problem is that the regex also matches in cases where it should not
+match.
+
+* Say you want to match a date in mm/dd/yyyy format, but we want to leave
+the user the choice of date separators.The quick solution is `\d\d.\d\d.\d\d` .
+
+* Seems at first it matches a date like `02/12/03` just fine.Trouble is:
+`02512703` is also considered a valid date by this regualr expression
+
+* In this match, the first dot matched `5`, and the second matched `7`.
+
+* `\d\d[- /.]\d\d[- /.]\d\d`
+
+#### Strings Ending with a Line Break
+
+* `^\d+$` - matches `123` where the subject string is `123` or `123\n`.
+
+#### Zero-Length Regex Matches
+
+* Using `^\d*$` to test if the user entered a number would give undesirable
+results.It causes the script to accept an empty string as a valid input.
+
+* The solution is `^\d+$` with the proper quantifier to require at least one
+digit to be entered.
+
+#### Advancing After a Zero-Length Regex Match
+
+* If a regex can find zero-length matches at any position in the string,
+then it will continue to match the empty string at each subsequent position
+until it can no longer match any characters in the string.
+
+* This can result in an infinite loop and cause perfomance issues.To avoid,
+this, it is recommended to use a possesive quantifier or an atomic group 
+to specify that the match must consume at least one character.
+
+#### Use Parenthesis for Grouping and Capturing
+
+* By placing part of a regular expression inside round brackets or parentheses
+, you can group that part of the regular expression together.
+
+* This allows you to apply a quantifier to the entire group or to restrict
+alternation to part of the regex.
+
+* Only parentheses are used for grouping.
+
+#### Parenthesis Create Numbered Capturing Groups
+
+* Besides grouping part of a regular expression together, parentheses also
+create a numbered capturing group
+
+* It stores the part of the string matched by the part of the regular
+expression.
+
+* The regex `Set(value)?` matches `Set` or `SetValue`.
+
+* In the first case, the first (and only) capturing group remains empty.
+
+* In the second case, the first capturing group matches `Value`.
+
+#### Named Capturing Groups and Backreferences
+
+* `(?P<name>group)` - captures the match of `group` into the backreference
+"name".
+
+* `name` must be an alphanumeric sequnce starting with a letter.
+
+* `<(?P<tag>[A-Z][A-Z0-9]*)\b[^>]*>.*?</\1>`
